@@ -534,7 +534,7 @@ export default function AppointmentDetail() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Layers className="h-4 w-4 text-primary" />
-                <span>Prescribed Medicines List ({prescriptionItems.length})</span>
+                <span>Selected Medicines ({prescriptionItems.length})</span>
               </h3>
               {prescriptionItems.length > 0 && (
                 <button

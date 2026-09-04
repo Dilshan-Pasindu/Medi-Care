@@ -95,7 +95,7 @@
 
   /* ─── Page Container ─────────────────────────────────── */
   .page-container {
-    @apply animate-fade-up;
+    animation: fadeUp 0.4s ease-out forwards;
   }
 }
 

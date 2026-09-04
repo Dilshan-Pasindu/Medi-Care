@@ -397,7 +397,7 @@ export default function AppointmentDetail() {
           {createdSuccess && (
             <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm rounded-xl flex items-center gap-2.5">
               <Check className="h-5 w-5 text-emerald-600" />
-              <span className="font-semibold">Prescription generated and sent to pharmacy! Redirecting...</span>
+              <span className="font-semibold">Prescription successfully generated and sent to pharmacy! Redirecting...</span>
             </div>
           )}
 

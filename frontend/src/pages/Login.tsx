@@ -163,7 +163,7 @@ export default function Login() {
             {[
               { icon: Heart, label: 'Find & book certified specialists instantly' },
               { icon: Calendar, label: 'Manage appointments in real-time' },
-              { icon: Shield, label: 'JWT-secured e-prescription management' },
+              { icon: Shield, label: 'Secure e-prescription management' },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-white/10">

@@ -409,7 +409,7 @@ export default function AppointmentDetail() {
                 <span>Search Pharmacy Inventory</span>
               </label>
               <span className="text-xs text-muted-foreground">
-                Live Inventory Status Included
+                Live Stock Status Included
               </span>
             </div>
 

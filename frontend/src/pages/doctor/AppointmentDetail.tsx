@@ -406,7 +406,7 @@ export default function AppointmentDetail() {
             <div className="flex items-center justify-between mb-3">
               <label className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Search className="h-4 w-4 text-primary" />
-                <span>Search & Select Medicine</span>
+                <span>Search Pharmacy Inventory</span>
               </label>
               <span className="text-xs text-muted-foreground">
                 Live Inventory Status Included

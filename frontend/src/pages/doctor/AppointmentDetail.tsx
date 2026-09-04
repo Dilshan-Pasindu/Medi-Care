@@ -336,7 +336,7 @@ export default function AppointmentDetail() {
       {!showPrescription && appointment.status === 'BOOKED' && (
         <div className="p-6 bg-gradient-to-r from-blue-50 to-indigo-50/50 rounded-xl border border-blue-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
           <div>
-            <h3 className="text-base font-bold text-foreground mb-1">Create E-Prescription</h3>
+            <h3 className="text-base font-bold text-foreground mb-1">Generate E-Prescription</h3>
             <p className="text-xs text-muted-foreground">
               Search available pharmacy inventory, select dosages, and dispatch directly to the dispensary.
             </p>

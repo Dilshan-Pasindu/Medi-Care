@@ -11,7 +11,6 @@ interface NavItem {
   path: string;
   icon: React.ElementType;
 }
-
 const navItems: Record<string, NavItem[]> = {
   PATIENT: [
     { label: 'Dashboard', path: '/patient/dashboard', icon: LayoutDashboard },
@@ -31,7 +30,7 @@ const navItems: Record<string, NavItem[]> = {
 };
 
 const roleConfig: Record<string, { label: string; color: string; bg: string }> = {
-  PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-400/20' },
+  PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-300/20' },
   DOCTOR: { label: 'Doctor', color: 'text-cyan-300', bg: 'bg-cyan-400/20' },
   PHARMACIST: { label: 'Pharmacist', color: 'text-teal-300', bg: 'bg-teal-400/20' },
 };
@@ -42,7 +41,7 @@ export function Sidebar() {
 
   const items = navItems[user.role] || [];
   const role = roleConfig[user.role] || { label: user.role, color: 'text-white/70', bg: 'bg-white/10' };
-  const initials = user.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'U';
+  const initials = user.name?.split(' ').map(n => n[0]).join('').slice(0, 3).toUpperCase() || 'U';
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col shadow-sidebar"

@@ -72,14 +72,14 @@ export default function DoctorDashboard() {
   return (
     <div className="page-container space-y-6">
       {/* ── Header ── */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl text-white shadow-md"
+          <div className="p-3 rounded-2xl text-white shadow-md shrink-0"
             style={{ background: 'linear-gradient(135deg, hsl(175 84% 28%), hsl(190 80% 38%))' }}>
             <LayoutDashboard className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">
               Welcome back, <span className="text-gradient-medical">{user?.name?.split(' ')[0] || 'Doctor'}</span>
             </h1>
             <p className="text-sm text-slate-500 mt-0.5 font-medium">
@@ -93,7 +93,7 @@ export default function DoctorDashboard() {
         <button
           onClick={handleRefresh}
           disabled={refreshing}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 shadow-card disabled:opacity-50"
+          className="self-start sm:self-auto inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-semibold rounded-xl hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 shadow-card disabled:opacity-50 shrink-0"
         >
           <RefreshCw className={`h-4 w-4 text-teal-500 ${refreshing ? 'animate-spin' : ''}`} />
           Refresh Queue
@@ -137,37 +137,38 @@ export default function DoctorDashboard() {
 
         {/* Card Header */}
         <div className="px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-slate-50/80 to-teal-50/30">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div className="flex items-center gap-2">
               <Stethoscope className="h-4 w-4 text-teal-600" />
               <h2 className="text-sm font-bold text-slate-800 uppercase tracking-wider">Patient Queue</h2>
+              <span className="text-xs text-slate-400 font-medium ml-1">
+                ({filteredAppointments.length} patient{filteredAppointments.length !== 1 ? 's' : ''})
+              </span>
             </div>
 
-            {/* Filter Tabs */}
-            <div className="flex items-center gap-1 bg-slate-100/80 rounded-xl p-1">
-              {filters.map(({ key, count }) => (
-                <button
-                  key={key}
-                  onClick={() => setActiveFilter(key)}
-                  className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 ${
-                    activeFilter === key
-                      ? 'bg-white text-teal-700 shadow-sm border border-teal-100'
-                      : 'text-slate-500 hover:text-slate-700'
-                  }`}
-                >
-                  {filterLabels[key]}
-                  <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
-                    activeFilter === key ? 'bg-teal-100 text-teal-700' : 'bg-slate-200 text-slate-500'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              ))}
+            {/* Filter Tabs — horizontally scrollable on mobile */}
+            <div className="overflow-x-auto pb-0.5 -mx-6 px-6 sm:mx-0 sm:px-0 sm:overflow-visible">
+              <div className="flex items-center gap-1 bg-slate-100/80 rounded-xl p-1 w-max sm:w-auto">
+                {filters.map(({ key, count }) => (
+                  <button
+                    key={key}
+                    onClick={() => setActiveFilter(key)}
+                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 whitespace-nowrap ${
+                      activeFilter === key
+                        ? 'bg-white text-teal-700 shadow-sm border border-teal-100'
+                        : 'text-slate-500 hover:text-slate-700'
+                    }`}
+                  >
+                    {filterLabels[key]}
+                    <span className={`ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      activeFilter === key ? 'bg-teal-100 text-teal-700' : 'bg-slate-200 text-slate-500'
+                    }`}>
+                      {count}
+                    </span>
+                  </button>
+                ))}
+              </div>
             </div>
-
-            <span className="text-xs text-slate-400 font-medium">
-              {filteredAppointments.length} patient{filteredAppointments.length !== 1 ? 's' : ''}
-            </span>
           </div>
         </div>
 

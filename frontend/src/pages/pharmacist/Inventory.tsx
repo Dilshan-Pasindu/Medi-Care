@@ -267,7 +267,7 @@ function Toast({ message, type, onDismiss }: { message: string; type: 'success' 
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-[60] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-sm font-medium animate-[slideUp_0.3s_ease] ${
+      className={`fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:bottom-6 sm:w-auto z-[60] flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl text-sm font-medium animate-[slideUp_0.3s_ease] ${
         type === 'success' ? 'bg-emerald-600 text-white' : 'bg-red-600 text-white'
       }`}
     >

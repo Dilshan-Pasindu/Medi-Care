@@ -20,7 +20,7 @@ const navItems: Record<string, NavItem[]> = {
   ],
   DOCTOR: [
     { label: 'Dashboard', path: '/doctor/dashboard', icon: LayoutDashboard },
-    { label: 'Prescriptions', path: '/doctor/prescriptions', icon: FileText },
+    { label: 'Prescriptions', path: '/doctor/prescriptions', icon: FileText  },
   ],
   PHARMACIST: [
     { label: 'Dashboard', path: '/pharmacist/dashboard', icon: LayoutDashboard },
@@ -32,7 +32,7 @@ const navItems: Record<string, NavItem[]> = {
 const roleConfig: Record<string, { label: string; color: string; bg: string }> = {
   PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-300/20' },
   DOCTOR: { label: 'Doctor', color: 'text-cyan-300', bg: 'bg-cyan-400/20' },
-  PHARMACIST: { label: 'Pharmacist', color: 'text-teal-300', bg: 'bg-teal-400/20' },
+  PHARMACIST: { label: 'Pharmacist', color: 'text-teal-200', bg: 'bg-teal-300/20' },
 };
 
 export function Sidebar() {
@@ -45,7 +45,7 @@ export function Sidebar() {
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col shadow-sidebar"
-      style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 18%) 100%)' }}>
+      style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 20%) 100%)' }}>
 
       {/* ── Logo ── */}
       <div className="px-5 pt-6 pb-5">

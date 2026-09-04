@@ -319,7 +319,7 @@ export default function AppointmentDetail() {
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
           className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none transition-all"
-          placeholder="Enter clinical examination notes, vitals, diagnosis, and patient history..."
+          placeholder="Enter clinical examination notes, vitals, diagnosis, and patient history here..."
         />
         <div className="flex justify-end mt-3">
           <button

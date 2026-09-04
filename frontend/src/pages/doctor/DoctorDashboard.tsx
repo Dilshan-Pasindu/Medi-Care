@@ -74,6 +74,23 @@ export default function DoctorDashboard() {
 
   return (
     <div className="page-container space-y-6">
+      {/* ── API Error Banner ── */}
+      {fetchError && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
+          <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">Failed to load appointments</p>
+            <p className="text-red-700 mt-0.5">{fetchError}</p>
+            <button
+              onClick={handleRefresh}
+              className="mt-2 text-xs font-bold text-red-700 underline hover:text-red-900"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="flex items-center gap-4">

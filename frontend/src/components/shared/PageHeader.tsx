@@ -11,7 +11,7 @@ export function PageHeader({ title, description, actions, icon: Icon }: PageHead
       <div className="flex items-center gap-4">
         {Icon && (
           <div className="p-2.5 rounded-xl text-white shadow-md"
-            style={{ background: 'linear-gradient(135deg, hsl(175 84% 28%), hsl(190 80% 38%))' }}>
+            style={{ background: 'linear-gradient(135deg, hsl(175 84% 18%), hsl(190 80% 38%))' }}>
             <Icon className="h-5 w-5" />
           </div>
         )}

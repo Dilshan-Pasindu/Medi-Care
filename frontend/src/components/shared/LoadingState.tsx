@@ -2,7 +2,7 @@ import { Loader2, Activity } from 'lucide-react';
 
 export function LoadingState({ message = 'Loading...' }: { message?: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 gap-4">
+    <div className="flex flex-col items-center justify-center py-30 gap-4">
       <div className="relative">
         {/* Pulsing ring */}
         <div className="absolute inset-0 rounded-full animate-ping"

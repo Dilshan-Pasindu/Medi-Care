@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null;
   token: string | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (data: RegisterPayload) => Promise<void>;
   logout: () => void;
 }
@@ -39,11 +39,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     fetchUser();
   }, [fetchUser]);
 
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string): Promise<User> => {
     const { token: newToken, user: userData } = await authService.login(email, password);
     localStorage.setItem('medicare_token', newToken);
     setToken(newToken);
     setUser(userData as User);
+    return userData as User;
   };
 
   const register = async (data: RegisterPayload) => {

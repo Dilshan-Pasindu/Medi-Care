@@ -105,13 +105,13 @@ export default function StaffLogin() {
     }
     setLoading(true);
     try {
-      await login(email.trim(), password);
+      const loggedInUser = await login(email.trim(), password);
       const routes: Record<string, string> = {
         DOCTOR: '/doctor/dashboard',
         PHARMACIST: '/pharmacist/dashboard',
         ADMIN: '/admin/dashboard',
       };
-      navigate(routes[selectedRole] || '/');
+      navigate(routes[loggedInUser.role] || '/');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {

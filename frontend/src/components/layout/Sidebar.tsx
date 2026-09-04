@@ -28,12 +28,18 @@ const navItems: Record<string, NavItem[]> = {
     { label: 'Prescriptions', path: '/pharmacist/prescriptions', icon: ClipboardList },
     { label: 'Inventory', path: '/pharmacist/inventory', icon: Package },
   ],
+  ADMIN: [
+    { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { label: 'Prescriptions', path: '/admin/prescriptions', icon: ClipboardList },
+    { label: 'Inventory', path: '/admin/inventory', icon: Package },
+  ],
 };
 
 const roleConfig: Record<string, { label: string; color: string; bg: string }> = {
   PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-400/20' },
   DOCTOR: { label: 'Doctor', color: 'text-cyan-300', bg: 'bg-cyan-400/20' },
   PHARMACIST: { label: 'Pharmacist', color: 'text-teal-300', bg: 'bg-teal-400/20' },
+  ADMIN: { label: 'Admin', color: 'text-rose-300', bg: 'bg-rose-400/20' },
 };
 
 interface SidebarProps {

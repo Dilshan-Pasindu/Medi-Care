@@ -11,7 +11,7 @@ import { Appointment } from '../../types';
 import { formatDate, formatTime } from '../../lib/utils';
 import {
   Calendar, Clock, Users, FileText, Phone, ArrowRight, RefreshCw,
-  LayoutDashboard, User, Stethoscope, ChevronRight,
+  LayoutDashboard, User, Stethoscope, ChevronRight, AlertCircle,
 } from 'lucide-react';
 
 type FilterType = 'all' | 'today' | 'upcoming' | 'completed';
@@ -30,15 +30,18 @@ export default function DoctorDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
   const loadAppointments = async () => {
+    setFetchError(null);
     try {
-      const res = await appointmentService.getAll(1, 50);
+      const res = await appointmentService.getAll(1, 200);
       setAppointments(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching doctor appointments:', err);
+      setFetchError(err.message || 'Failed to load appointments. Please refresh.');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -71,6 +74,23 @@ export default function DoctorDashboard() {
 
   return (
     <div className="page-container space-y-6">
+      {/* ── API Error Banner ── */}
+      {fetchError && (
+        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-800">
+          <AlertCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">Failed to load appointments</p>
+            <p className="text-red-700 mt-0.5">{fetchError}</p>
+            <button
+              onClick={handleRefresh}
+              className="mt-2 text-xs font-bold text-red-700 underline hover:text-red-900"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div className="flex items-center gap-4">

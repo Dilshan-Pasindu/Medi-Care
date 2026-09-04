@@ -53,4 +53,31 @@ export const medicineController = {
       res.status(error.statusCode || 500).json({ success: false, message: error.message });
     }
   },
+
+  async create(req: Request, res: Response): Promise<void> {
+    try {
+      const medicine = await medicineService.create(req.body);
+      res.status(201).json({ success: true, data: medicine });
+    } catch (error: any) {
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
+    }
+  },
+
+  async update(req: Request, res: Response): Promise<void> {
+    try {
+      const medicine = await medicineService.update(req.params.id, req.body);
+      res.json({ success: true, data: medicine });
+    } catch (error: any) {
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
+    }
+  },
+
+  async delete(req: Request, res: Response): Promise<void> {
+    try {
+      await medicineService.delete(req.params.id);
+      res.json({ success: true, message: 'Medicine deleted successfully' });
+    } catch (error: any) {
+      res.status(error.statusCode || 500).json({ success: false, message: error.message });
+    }
+  },
 };

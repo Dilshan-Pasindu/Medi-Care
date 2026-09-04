@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   LayoutDashboard, Calendar, FileText, Search, Pill, LogOut,
-  Stethoscope, ClipboardList, Package
+  Stethoscope, ClipboardList, Package, ChevronRight, Activity,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -30,51 +30,105 @@ const navItems: Record<string, NavItem[]> = {
   ],
 };
 
+const roleConfig: Record<string, { label: string; color: string; bg: string }> = {
+  PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-400/20' },
+  DOCTOR: { label: 'Doctor', color: 'text-cyan-300', bg: 'bg-cyan-400/20' },
+  PHARMACIST: { label: 'Pharmacist', color: 'text-teal-300', bg: 'bg-teal-400/20' },
+};
+
 export function Sidebar() {
   const { user, logout } = useAuth();
   if (!user) return null;
 
   const items = navItems[user.role] || [];
+  const role = roleConfig[user.role] || { label: user.role, color: 'text-white/70', bg: 'bg-white/10' };
+  const initials = user.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'U';
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-60 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-5 border-b border-gray-200">
-        <div className="flex items-center gap-2">
-          <Stethoscope className="h-6 w-6 text-primary" />
-          <span className="text-lg font-semibold text-primary-800">MediCare</span>
+    <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col shadow-sidebar"
+      style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 18%) 100%)' }}>
+
+      {/* ── Logo ── */}
+      <div className="px-5 pt-6 pb-5">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-xl bg-white/15 shadow-inner-glow">
+            <Stethoscope className="h-6 w-6 text-white" />
+          </div>
+          <div>
+            <span className="text-lg font-bold text-white tracking-tight">MediCare</span>
+            <div className="flex items-center gap-1 mt-0.5">
+              <Activity className="h-2.5 w-2.5 text-emerald-400" />
+              <span className="text-[10px] font-medium text-emerald-400/80 tracking-widest uppercase">
+                Health Portal
+              </span>
+            </div>
+          </div>
         </div>
+        <div className="mt-4 h-px bg-white/10" />
       </div>
 
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+      {/* ── Navigation ── */}
+      <nav className="flex-1 px-3 pb-3 space-y-0.5 overflow-y-auto scrollbar-thin">
+        <p className="px-3 mb-2 text-[10px] font-bold text-white/35 tracking-widest uppercase">
+          Navigation
+        </p>
         {items.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
             className={({ isActive }) =>
               cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-primary-50 text-primary border-l-2 border-primary'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                'nav-item group relative',
+                isActive ? 'nav-item-active' : 'nav-item-inactive'
               )
             }
           >
-            <item.icon className="h-4 w-4" />
-            {item.label}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-emerald-400 rounded-r-full" />
+                )}
+                <div className={cn(
+                  'p-1.5 rounded-lg transition-colors',
+                  isActive ? 'bg-white/20' : 'bg-white/8 group-hover:bg-white/15'
+                )}>
+                  <item.icon className="h-4 w-4" />
+                </div>
+                <span className="flex-1 font-medium">{item.label}</span>
+                {isActive && (
+                  <ChevronRight className="h-3.5 w-3.5 text-white/50" />
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="p-3 border-t border-gray-200">
-        <div className="px-3 py-2 mb-2">
-          <p className="text-sm font-medium text-foreground truncate">{user.name}</p>
-          <p className="text-xs text-muted-foreground capitalize">{user.role.toLowerCase()}</p>
+      {/* ── User Profile & Logout ── */}
+      <div className="px-3 pb-5">
+        <div className="h-px bg-white/10 mb-3" />
+
+        {/* User card */}
+        <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-white/8 mb-2">
+          <div className="h-9 w-9 rounded-lg flex items-center justify-center text-sm font-bold text-white shrink-0"
+            style={{ background: 'linear-gradient(135deg, hsl(175 84% 40%), hsl(190 80% 50%))' }}>
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-white truncate leading-tight">{user.name}</p>
+            <span className={cn('inline-block mt-0.5 px-2 py-px text-[10px] font-bold rounded-full', role.bg, role.color)}>
+              {role.label}
+            </span>
+          </div>
         </div>
+
         <button
           onClick={logout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-md text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-danger transition-colors"
+          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium text-white/55 hover:bg-red-500/15 hover:text-red-400 transition-all duration-200 group"
         >
-          <LogOut className="h-4 w-4" />
+          <div className="p-1.5 rounded-lg bg-white/5 group-hover:bg-red-500/20 transition-colors">
+            <LogOut className="h-4 w-4" />
+          </div>
           Sign Out
         </button>
       </div>

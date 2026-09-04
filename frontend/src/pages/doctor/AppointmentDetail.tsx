@@ -549,7 +549,7 @@ export default function AppointmentDetail() {
             {prescriptionItems.length === 0 ? (
               <div className="p-8 border-2 border-dashed border-gray-200 rounded-xl text-center">
                 <Package className="h-8 w-8 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm font-semibold text-gray-700">No medicines added yet</p>
+                <p className="text-sm font-semibold text-gray-700">No medicines currently selected</p>
                 <p className="text-xs text-muted-foreground mt-1">
                   Search and click "+ Add" above to include medicines in this e-prescription
                 </p>

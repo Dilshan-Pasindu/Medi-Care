@@ -13,6 +13,7 @@ import PharmacistDashboard from './pages/pharmacist/PharmacistDashboard';
 import PrescriptionDetail from './pages/pharmacist/PrescriptionDetail';
 import PharmacistPrescriptions from './pages/pharmacist/PharmacistPrescriptions';
 import Inventory from './pages/pharmacist/Inventory';
+import StaffLogin from './pages/StaffLogin';
 
 function RootRedirect() {
   const { user, loading } = useAuth();
@@ -34,6 +35,7 @@ function App() {
         <Routes>
           <Route path="/" element={<RootRedirect />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/staff-login" element={<StaffLogin />} />
 
           <Route element={<DashboardLayout allowedRoles={['PATIENT']} />}>
             <Route path="/patient/dashboard" element={<PatientDashboard />} />

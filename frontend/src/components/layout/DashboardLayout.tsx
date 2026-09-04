@@ -28,7 +28,7 @@ export function DashboardLayout({ allowedRoles }: DashboardLayoutProps) {
         {/* Top accent bar */}
         <div className="h-0.6 w-full" style={{
           background: 'linear-gradient(90deg, hsl(175 84% 28%), hsl(200 80% 38%), hsl(200 84% 18%))',
-          backgroundSize: '200% 100%',
+          backgroundSize: '200% 150%',
         }} />
         <div className="p-7">
            <div className="h-0.5 w-full" style={{

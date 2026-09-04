@@ -31,6 +31,11 @@ export function DashboardLayout({ allowedRoles }: DashboardLayoutProps) {
           backgroundSize: '200% 100%',
         }} />
         <div className="p-7">
+           <div className="h-0.5 w-full" style={{
+          background: 'linear-gradient(90deg, hsl(175 84% 28%), hsl(190 80% 38%), hsl(175 84% 28%))',
+          backgroundSize: '200% 100%',
+        }} />
+        <div className="p6">
           <Outlet />
         </div>
       </main>

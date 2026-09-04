@@ -48,7 +48,7 @@ export function Sidebar() {
       style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 20%) 100%)' }}>
 
       {/* ── Logo ── */}
-      <div className="px-5 pt-6 pb-5">
+      <div className="px-5 pt-6 pb-6">
         <div className="flex items-center gap-3">
           <div className="p-2 rounded-xl bg-white/15 shadow-inner-glow">
             <Stethoscope className="h-6 w-6 text-white" />

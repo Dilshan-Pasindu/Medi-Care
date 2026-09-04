@@ -541,7 +541,7 @@ export default function AppointmentDetail() {
                   onClick={() => setPrescriptionItems([])}
                   className="text-xs text-muted-foreground hover:text-danger transition-colors"
                 >
-                  Clear All
+                  Clear Selection
                 </button>
               )}
             </div>

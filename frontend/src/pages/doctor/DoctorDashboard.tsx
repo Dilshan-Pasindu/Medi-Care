@@ -11,7 +11,7 @@ import { Appointment } from '../../types';
 import { formatDate, formatTime } from '../../lib/utils';
 import {
   Calendar, Clock, Users, FileText, Phone, ArrowRight, RefreshCw,
-  LayoutDashboard, User, Stethoscope, ChevronRight,
+  LayoutDashboard, User, Stethoscope, ChevronRight, AlertCircle,
 } from 'lucide-react';
 
 type FilterType = 'all' | 'today' | 'upcoming' | 'completed';
@@ -30,15 +30,18 @@ export default function DoctorDashboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [fetchError, setFetchError] = useState<string | null>(null);
 
   const todayStr = new Date().toISOString().split('T')[0];
 
   const loadAppointments = async () => {
+    setFetchError(null);
     try {
-      const res = await appointmentService.getAll(1, 50);
+      const res = await appointmentService.getAll(1, 200);
       setAppointments(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching doctor appointments:', err);
+      setFetchError(err.message || 'Failed to load appointments. Please refresh.');
     } finally {
       setLoading(false);
       setRefreshing(false);

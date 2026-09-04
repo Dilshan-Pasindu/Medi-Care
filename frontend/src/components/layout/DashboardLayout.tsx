@@ -26,8 +26,8 @@ export function DashboardLayout({ allowedRoles }: DashboardLayoutProps) {
       <Sidebar />
       <main className="ml-64 min-h-screen">
         {/* Top accent bar */}
-        <div className="h-0.5 w-full" style={{
-          background: 'linear-gradient(90deg, hsl(175 84% 28%), hsl(190 80% 38%), hsl(175 84% 28%))',
+        <div className="h-0.6 w-full" style={{
+          background: 'linear-gradient(90deg, hsl(175 84% 28%), hsl(200 80% 38%), hsl(175 84% 28%))',
           backgroundSize: '200% 100%',
         }} />
         <div className="p-7">

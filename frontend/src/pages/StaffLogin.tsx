@@ -13,9 +13,10 @@ import {
   ChevronRight,
   Shield,
   Users,
+  ShieldCheck,
 } from 'lucide-react';
 
-type StaffRole = 'DOCTOR' | 'PHARMACIST';
+type StaffRole = 'DOCTOR' | 'PHARMACIST' | 'ADMIN';
 
 const ROLE_CONFIG: Record<
   StaffRole,
@@ -55,6 +56,18 @@ const ROLE_CONFIG: Record<
     description: 'Process incoming prescriptions, manage medicine inventory, and track dispensed items.',
     features: ['Process prescriptions', 'Manage inventory', 'Track dispensing history'],
     emailPlaceholder: 'pharmacist@medicare.lk',
+  },
+  ADMIN: {
+    label: 'Admin',
+    subtitle: 'Admin Console',
+    accentFrom: 'hsl(340 85% 30%)',
+    accentTo: 'hsl(355 75% 45%)',
+    panelFrom: 'hsl(340 85% 10%)',
+    panelTo: 'hsl(355 75% 18%)',
+    icon: ShieldCheck,
+    description: 'Full system access — manage users, doctors, pharmacists, and platform-wide settings.',
+    features: ['Manage users & roles', 'System configuration', 'Platform analytics & reports'],
+    emailPlaceholder: 'admin@medicare.lk',
   },
 };
 
@@ -96,6 +109,7 @@ export default function StaffLogin() {
       const routes: Record<string, string> = {
         DOCTOR: '/doctor/dashboard',
         PHARMACIST: '/pharmacist/dashboard',
+        ADMIN: '/admin/dashboard',
       };
       navigate(routes[selectedRole] || '/');
     } catch (err: any) {

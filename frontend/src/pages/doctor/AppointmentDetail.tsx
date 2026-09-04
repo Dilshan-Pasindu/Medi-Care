@@ -312,7 +312,7 @@ export default function AppointmentDetail() {
       {/* Consultation Notes Card */}
       <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6 shadow-sm">
         <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-          <span>Doctor's Clinical Notes</span>
+          <span>Clinical Examination Notes</span>
         </h3>
         <textarea
           value={notes}

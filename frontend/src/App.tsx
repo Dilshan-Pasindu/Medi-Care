@@ -13,6 +13,7 @@ import PharmacistDashboard from './pages/pharmacist/PharmacistDashboard';
 import PrescriptionDetail from './pages/pharmacist/PrescriptionDetail';
 import PharmacistPrescriptions from './pages/pharmacist/PharmacistPrescriptions';
 import Inventory from './pages/pharmacist/Inventory';
+import StaffLogin from './pages/StaffLogin';
 
 function RootRedirect() {
   const { user, loading } = useAuth();
@@ -23,6 +24,7 @@ function RootRedirect() {
     PATIENT: '/patient/dashboard',
     DOCTOR: '/doctor/dashboard',
     PHARMACIST: '/pharmacist/dashboard',
+    ADMIN: '/admin/dashboard',
   };
   return <Navigate to={routes[user.role] || '/login'} replace />;
 }
@@ -34,7 +36,9 @@ function App() {
         <Routes>
           <Route path="/" element={<RootRedirect />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/staff-login" element={<StaffLogin />} />
 
+          {/* ── Patient Routes ── */}
           <Route element={<DashboardLayout allowedRoles={['PATIENT']} />}>
             <Route path="/patient/dashboard" element={<PatientDashboard />} />
             <Route path="/patient/specialist" element={<SpecialistFinder />} />
@@ -42,17 +46,27 @@ function App() {
             <Route path="/patient/prescriptions" element={<PatientPrescriptions />} />
           </Route>
 
+          {/* ── Doctor Routes ── */}
           <Route element={<DashboardLayout allowedRoles={['DOCTOR']} />}>
             <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
             <Route path="/doctor/appointments/:id" element={<AppointmentDetail />} />
             <Route path="/doctor/prescriptions" element={<DoctorPrescriptions />} />
           </Route>
 
+          {/* ── Pharmacist Routes ── */}
           <Route element={<DashboardLayout allowedRoles={['PHARMACIST']} />}>
             <Route path="/pharmacist/dashboard" element={<PharmacistDashboard />} />
             <Route path="/pharmacist/prescriptions" element={<PharmacistPrescriptions />} />
             <Route path="/pharmacist/prescriptions/:id" element={<PrescriptionDetail />} />
             <Route path="/pharmacist/inventory" element={<Inventory />} />
+          </Route>
+
+          {/* ── Admin Routes (reuses pharmacist/inventory views) ── */}
+          <Route element={<DashboardLayout allowedRoles={['ADMIN']} />}>
+            <Route path="/admin/dashboard" element={<PharmacistDashboard />} />
+            <Route path="/admin/prescriptions" element={<PharmacistPrescriptions />} />
+            <Route path="/admin/prescriptions/:id" element={<PrescriptionDetail />} />
+            <Route path="/admin/inventory" element={<Inventory />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

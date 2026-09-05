@@ -64,4 +64,58 @@ export const medicineRepository = {
     );
     return result.rows;
   },
+
+  async create(data: {
+    name: string;
+    category: string;
+    price: number;
+    stock_quantity: number;
+    minimum_stock: number;
+    expiry_date?: string;
+  }) {
+    const result = await pool.query(
+      `INSERT INTO medicines (name, category, price, stock_quantity, minimum_stock, expiry_date)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *`,
+      [data.name, data.category, data.price, data.stock_quantity, data.minimum_stock, data.expiry_date || null]
+    );
+    return result.rows[0];
+  },
+
+  async update(id: string, data: {
+    name?: string;
+    category?: string;
+    price?: number;
+    stock_quantity?: number;
+    minimum_stock?: number;
+    expiry_date?: string;
+  }) {
+    const fields: string[] = [];
+    const values: any[] = [];
+    let idx = 1;
+
+    if (data.name !== undefined)           { fields.push(`name = $${idx++}`);           values.push(data.name); }
+    if (data.category !== undefined)       { fields.push(`category = $${idx++}`);       values.push(data.category); }
+    if (data.price !== undefined)          { fields.push(`price = $${idx++}`);          values.push(data.price); }
+    if (data.stock_quantity !== undefined) { fields.push(`stock_quantity = $${idx++}`); values.push(data.stock_quantity); }
+    if (data.minimum_stock !== undefined)  { fields.push(`minimum_stock = $${idx++}`);  values.push(data.minimum_stock); }
+    if (data.expiry_date !== undefined)    { fields.push(`expiry_date = $${idx++}`);    values.push(data.expiry_date || null); }
+
+    if (fields.length === 0) return null;
+
+    values.push(id);
+    const result = await pool.query(
+      `UPDATE medicines SET ${fields.join(', ')} WHERE id = $${idx} RETURNING *`,
+      values
+    );
+    return result.rows[0] || null;
+  },
+
+  async delete(id: string) {
+    const result = await pool.query(
+      'DELETE FROM medicines WHERE id = $1 RETURNING id',
+      [id]
+    );
+    return result.rows[0] || null;
+  },
 };

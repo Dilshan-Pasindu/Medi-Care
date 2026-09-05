@@ -21,8 +21,10 @@ export function formatTime(time: string): string {
   return `${displayHour}:${minutes} ${ampm}`;
 }
 
-export function formatCurrency(amount: number): string {
-  return `Rs. ${amount.toFixed(2)}`;
+export function formatCurrency(amount: number | string | null | undefined): string {
+  if (amount === null || amount === undefined || amount === '') return 'Rs. 0.00';
+  const num = typeof amount === 'number' ? amount : parseFloat(String(amount));
+  return `Rs. ${(isNaN(num) ? 0 : num).toFixed(2)}`;
 }
 
 export function getStatusColor(status: string): string {

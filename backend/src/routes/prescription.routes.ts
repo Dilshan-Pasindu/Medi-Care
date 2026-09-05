@@ -5,7 +5,7 @@ import { roleMiddleware } from '../middleware/role.middleware';
 
 const router = Router();
 
-router.get('/pharmacy/stats', authMiddleware, roleMiddleware('PHARMACIST'), prescriptionController.getPharmacyStats);
+router.get('/pharmacy/stats', authMiddleware, roleMiddleware('PHARMACIST', 'ADMIN'), prescriptionController.getPharmacyStats);
 router.get('/', authMiddleware, prescriptionController.getAll);
 router.post('/', authMiddleware, roleMiddleware('DOCTOR'), prescriptionController.create);
 router.get('/:id', authMiddleware, prescriptionController.getById);

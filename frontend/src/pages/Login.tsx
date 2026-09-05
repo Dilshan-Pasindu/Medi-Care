@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import {
   Stethoscope, Mail, Lock, User, Phone, Calendar, Loader2,
-  CheckCircle2, AlertCircle, Activity, Heart, Shield, ArrowRight,
+  CheckCircle2, AlertCircle, Activity, Heart, Shield, ArrowRight, Stethoscope as StethoscopeIcon,
 } from 'lucide-react';
 
 export default function Login() {
@@ -163,7 +163,7 @@ export default function Login() {
             {[
               { icon: Heart, label: 'Find & book certified specialists instantly' },
               { icon: Calendar, label: 'Manage appointments in real-time' },
-              { icon: Shield, label: 'JWT-secured e-prescription management' },
+              { icon: Shield, label: 'Secure e-prescription management' },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-white/10">
@@ -423,10 +423,20 @@ export default function Login() {
             </div>
 
             {/* Card Footer */}
-            <div className="px-8 py-4 bg-slate-50 border-t border-slate-100">
+            <div className="px-8 py-4 bg-slate-50 border-t border-slate-100 space-y-2">
               <p className="text-xs text-slate-400 text-center flex items-center justify-center gap-1.5">
                 <Shield className="h-3 w-3 text-teal-500" />
                 Protected by 256-bit JWT &amp; Supabase PostgreSQL
+              </p>
+              <p className="text-xs text-slate-500 text-center">
+                Doctor or Pharmacist?{' '}
+                <Link
+                  to="/staff-login"
+                  className="font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-0.5 transition-colors"
+                >
+                  <StethoscopeIcon className="h-3 w-3" />
+                  &nbsp;Staff Login
+                </Link>
               </p>
             </div>
           </div>

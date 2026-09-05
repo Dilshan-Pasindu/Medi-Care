@@ -18,14 +18,78 @@ interface AIAnalysisResult {
   disclaimer: string;
 }
 
+// ─── Health-intent guard ───────────────────────────────────────────────────
+const MEDICAL_KEYWORDS = [
+  'pain', 'ache', 'aching', 'aches', 'fever', 'temperature', 'cough',
+  'cold', 'headache', 'head', 'dizzy', 'dizziness', 'nausea', 'vomit',
+  'stomach', 'abdomen', 'chest', 'heart', 'blood', 'skin', 'rash', 'itch',
+  'itching', 'throat', 'sore throat', 'ear', 'nose', 'breathing', 'breath',
+  'breathless', 'tired', 'fatigue', 'weak', 'weakness', 'swelling', 'swollen',
+  'joint', 'back', 'knee', 'shoulder', 'muscle', 'pressure', 'hypertension',
+  'infection', 'virus', 'bacteria', 'symptom', 'condition', 'disease', 'illness',
+  'sick', 'ill', 'hurt', 'burning', 'bleeding', 'injury', 'allergy', 'asthma',
+  'diabetes', 'migraine', 'anxiety', 'depression', 'insomnia', 'weight',
+  'appetite', 'diarrhea', 'constipation', 'pregnant', 'pregnancy', 'menstrual',
+  'period', 'urine', 'kidney', 'liver', 'cancer', 'tumor', 'wound', 'fracture',
+  'sprain', 'tingling', 'numbness', 'seizure', 'vertigo', 'fainting',
+  'palpitation', 'shortness', 'fluttering', 'angina', 'dermatitis', 'acne',
+  'lesion', 'hive', 'tonsil', 'sinus', 'hearing', 'hoarseness', 'nasal',
+  'ringing', 'arthritis', 'spine', 'hip', 'child', 'baby', 'toddler',
+  'flu', 'malaise', 'body ache', 'running nose', 'doctor', 'hospital',
+  'medical', 'medicine', 'prescription', 'specialist', 'channel', 'consult',
+  'checkup', 'check up', 'treatment', 'diagnosis', 'feeling', 'feel bad',
+  'feel sick', 'unwell', 'not well', 'health', 'pain in',
+];
+
+function isHealthRelated(message: string): boolean {
+  const text = message.toLowerCase();
+  return MEDICAL_KEYWORDS.some((kw) => text.includes(kw));
+}
+
+function getConversationalReply(message: string): string {
+  const text = message.toLowerCase().trim();
+
+  if (/^(hi+|hello+|hey+|good morning|good afternoon|good evening|howdy|greetings|helo|hii|hiii)[\s!.]*$/.test(text)) {
+    return "Hello! 👋 I'm your **MediCare AI Health Assistant**. I'm here to help you identify your symptoms and find the right specialist to channel.\n\nPlease describe any medical symptoms or health concerns you're experiencing — for example, *\"I have a high fever and sore throat\"* or *\"I'm having chest pain and shortness of breath\"* — and I'll recommend the right doctor for you.";
+  }
+
+  if (/^(how are you|how do you do|what'?s up|hows it going)/.test(text)) {
+    return "I'm doing great, thanks for asking! 😊 I'm your **MediCare AI Health Assistant**. I'm here to analyze your symptoms and recommend the right medical specialist.\n\nPlease share any health concerns or symptoms you're experiencing, and I'll guide you.";
+  }
+
+  if (/^(thank|thanks|thank you|ty|thx)/.test(text)) {
+    return "You're most welcome! 😊 If you have any health concerns or symptoms you'd like to discuss, feel free to describe them and I'll help connect you with the right specialist.";
+  }
+
+  if (/^(bye|goodbye|see you|take care|ok|okay|yes|no|sure|yep|nope|hmm|ok+)[\s!.]*$/.test(text)) {
+    return "Take care! If you experience any health symptoms or need medical guidance anytime, I'm here to help. Stay healthy! 💙";
+  }
+
+  // Generic non-medical input
+  return "I'm your **MediCare AI Health Assistant**, specialized in analyzing medical symptoms and recommending the right specialist to channel.\n\nI'm not able to assist with that request, but I'm fully equipped to help with health-related concerns! Please describe any symptoms you're experiencing — such as pain, fever, skin issues, breathing difficulties, etc. — and I'll recommend the appropriate specialist for you.";
+}
+
+// ──────────────────────────────────────────────────────────────────────────
+
 export const aiService = {
   async analyzeCondition(message: string, history: ChatMessage[] = []): Promise<AIAnalysisResult> {
+    // Guard: If the message is not health-related, return a conversational response
+    if (!isHealthRelated(message)) {
+      return {
+        reply: getConversationalReply(message),
+        recommendedSpecialist: null,
+        identifiedSymptoms: [],
+        doctors: [],
+        disclaimer: '',
+      };
+    }
+
     const allSpecialists = await specialistRepository.findAll();
     const allSymptoms = await specialistRepository.getSymptoms();
 
     let analysis: {
       reply: string;
-      specialistName: string;
+      specialistName: string | null;
       symptoms: string[];
     } | null = null;
 
@@ -43,9 +107,20 @@ export const aiService = {
       analysis = localClinicalReasoner(message, allSpecialists, allSymptoms);
     }
 
+    // If no specialist matched (score = 0 in local reasoner)
+    if (!analysis.specialistName) {
+      return {
+        reply: analysis.reply,
+        recommendedSpecialist: null,
+        identifiedSymptoms: analysis.symptoms,
+        doctors: [],
+        disclaimer: '',
+      };
+    }
+
     // Match recommended specialist
     let matchedSpecialist = allSpecialists.find(
-      (s: any) => s.name.toLowerCase() === analysis!.specialistName.toLowerCase()
+      (s: any) => s.name.toLowerCase() === analysis!.specialistName!.toLowerCase()
     );
 
     if (!matchedSpecialist && allSpecialists.length > 0) {
@@ -87,13 +162,13 @@ async function callGeminiAPI(
   history: ChatMessage[],
   specialists: any[],
   symptoms: any[]
-): Promise<{ reply: string; specialistName: string; symptoms: string[] }> {
+): Promise<{ reply: string; specialistName: string | null; symptoms: string[] }> {
   const specialistNames = specialists.map((s: any) => s.name).join(', ');
   const symptomNames = symptoms.map((s: any) => s.name).join(', ');
 
   const systemInstruction = `
 You are MediCare's intelligent medical channeling assistant.
-Your job is to analyze the patient's description of their condition and symptoms, provide empathetic and clear medical insights, and recommend the exact medical specialist they should channel.
+Your ONLY job is to analyze medical symptoms and health complaints, and recommend the appropriate specialist.
 
 Available Specialists in our channeling center:
 ${specialistNames}
@@ -102,13 +177,14 @@ Available Registered Symptoms:
 ${symptomNames}
 
 Rules:
-1. Always be empathetic, professional, and clear.
-2. Recommend exactly ONE primary specialist from the available specialists list that best addresses their situation.
-3. Identify which registered symptoms match what they described.
-4. Output your response in STRICT JSON format with no markdown wrappers:
+1. ONLY respond to messages that describe medical symptoms, health conditions, or health-related questions.
+2. If the message is a greeting, casual conversation, or completely unrelated to health/medicine, respond conversationally WITHOUT recommending any specialist. In that case set specialistName to null and symptoms to [].
+3. For genuine health/symptom descriptions: be empathetic, professional, and clear. Recommend exactly ONE primary specialist from the list.
+4. Identify which registered symptoms match what they described.
+5. Output your response in STRICT JSON format with no markdown wrappers:
 {
-  "reply": "Your empathetic explanation to the patient, explaining why this specialist is appropriate and what they should monitor...",
-  "specialistName": "Exact specialist name from the list above",
+  "reply": "Your response. For non-medical messages: friendly conversational reply asking them to share symptoms. For medical messages: empathetic explanation of why this specialist is appropriate.",
+  "specialistName": "Exact specialist name from the list above, or null if not a medical query",
   "symptoms": ["Symptom1", "Symptom2"]
 }
 `;
@@ -157,7 +233,7 @@ Rules:
   const parsed = JSON.parse(text);
   return {
     reply: parsed.reply,
-    specialistName: parsed.specialistName || 'General Physician',
+    specialistName: parsed.specialistName || null,
     symptoms: Array.isArray(parsed.symptoms) ? parsed.symptoms : [],
   };
 }
@@ -166,7 +242,7 @@ function localClinicalReasoner(
   message: string,
   specialists: any[],
   symptoms: any[]
-): { reply: string; specialistName: string; symptoms: string[] } {
+): { reply: string; specialistName: string | null; symptoms: string[] } {
   const text = message.toLowerCase();
 
   // Keyword rules
@@ -215,7 +291,7 @@ function localClinicalReasoner(
     },
   ];
 
-  let bestMatch = rules[rules.length - 1]; // default General Physician
+  let bestMatch: typeof rules[0] | null = null;
   let maxScore = 0;
   let identifiedSymptoms: string[] = [];
 
@@ -230,6 +306,15 @@ function localClinicalReasoner(
       maxScore = score;
       bestMatch = rule;
     }
+  }
+
+  // If no keywords matched at all, don't recommend any specialist
+  if (maxScore === 0 || !bestMatch) {
+    return {
+      reply: "I understand you're reaching out, but I need a bit more detail to help you properly. Could you describe any physical symptoms you're experiencing? For example, you might mention pain location, fever, skin changes, breathing issues, or any other discomfort — and I'll match you with the right specialist.",
+      specialistName: null,
+      symptoms: [],
+    };
   }
 
   // Identify specific symptoms mentioned

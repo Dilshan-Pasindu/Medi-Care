@@ -14,6 +14,7 @@ import PrescriptionDetail from './pages/pharmacist/PrescriptionDetail';
 import PharmacistPrescriptions from './pages/pharmacist/PharmacistPrescriptions';
 import Inventory from './pages/pharmacist/Inventory';
 import StaffLogin from './pages/StaffLogin';
+import AdminDashboard from './pages/admin/AdminDashboard';
 
 function RootRedirect() {
   const { user, loading } = useAuth();
@@ -61,12 +62,9 @@ function App() {
             <Route path="/pharmacist/inventory" element={<Inventory />} />
           </Route>
 
-          {/* ── Admin Routes (reuses pharmacist/inventory views) ── */}
+          {/* ── Admin Routes ── */}
           <Route element={<DashboardLayout allowedRoles={['ADMIN']} />}>
-            <Route path="/admin/dashboard" element={<PharmacistDashboard />} />
-            <Route path="/admin/prescriptions" element={<PharmacistPrescriptions />} />
-            <Route path="/admin/prescriptions/:id" element={<PrescriptionDetail />} />
-            <Route path="/admin/inventory" element={<Inventory />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />

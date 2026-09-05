@@ -5,6 +5,7 @@ import specialistRoutes from './routes/specialist.routes';
 import appointmentRoutes from './routes/appointment.routes';
 import medicineRoutes from './routes/medicine.routes';
 import prescriptionRoutes from './routes/prescription.routes';
+import adminRoutes from './routes/admin.routes';
 import { errorMiddleware } from './middleware/error.middleware';
 
 const app = express();
@@ -21,6 +22,7 @@ app.use('/api/specialists', specialistRoutes);
 app.use('/api/appointments', appointmentRoutes);
 app.use('/api/medicines', medicineRoutes);
 app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use(errorMiddleware);
 

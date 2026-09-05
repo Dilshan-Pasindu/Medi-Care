@@ -31,6 +31,8 @@ const ROLE_CONFIG: Record<
     description: string;
     features: string[];
     emailPlaceholder: string;
+    demoEmail: string;
+    demoPassword: string;
   }
 > = {
   DOCTOR: {
@@ -43,7 +45,9 @@ const ROLE_CONFIG: Record<
     icon: Stethoscope,
     description: 'Manage patient appointments, issue digital prescriptions, and access comprehensive medical records.',
     features: ['View & manage appointments', 'Issue digital prescriptions', 'Patient medical history'],
-    emailPlaceholder: 'doctor@medicare.lk',
+    emailPlaceholder: 'nimal@medicare.com',
+    demoEmail: 'nimal@medicare.com',
+    demoPassword: 'password123',
   },
   PHARMACIST: {
     label: 'Pharmacist',
@@ -55,7 +59,9 @@ const ROLE_CONFIG: Record<
     icon: FlaskConical,
     description: 'Process incoming prescriptions, manage medicine inventory, and track dispensed items.',
     features: ['Process prescriptions', 'Manage inventory', 'Track dispensing history'],
-    emailPlaceholder: 'pharmacist@medicare.lk',
+    emailPlaceholder: 'amal@medicare.com',
+    demoEmail: 'amal@medicare.com',
+    demoPassword: 'password123',
   },
   ADMIN: {
     label: 'Admin',
@@ -67,7 +73,9 @@ const ROLE_CONFIG: Record<
     icon: ShieldCheck,
     description: 'Full system access — manage users, doctors, pharmacists, and platform-wide settings.',
     features: ['Manage users & roles', 'System configuration', 'Platform analytics & reports'],
-    emailPlaceholder: 'admin@medicare.lk',
+    emailPlaceholder: 'admin@medicare.com',
+    demoEmail: 'admin@medicare.com',
+    demoPassword: 'admin123',
   },
 };
 
@@ -105,13 +113,13 @@ export default function StaffLogin() {
     }
     setLoading(true);
     try {
-      await login(email.trim(), password);
+      const loggedInUser = await login(email.trim(), password);
       const routes: Record<string, string> = {
         DOCTOR: '/doctor/dashboard',
         PHARMACIST: '/pharmacist/dashboard',
         ADMIN: '/admin/dashboard',
       };
-      navigate(routes[selectedRole] || '/');
+      navigate(routes[loggedInUser.role] || '/');
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -271,6 +279,26 @@ export default function StaffLogin() {
                   <span className="leading-snug">{error}</span>
                 </div>
               )}
+
+              {/* Quick Demo Fill Helper */}
+              <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 text-xs">
+                <div className="truncate">
+                  <div className="font-semibold text-slate-700">Demo {cfg.label} Credentials:</div>
+                  <div className="text-slate-500 font-mono mt-0.5">
+                    {cfg.demoEmail} &bull; {cfg.demoPassword}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail(cfg.demoEmail);
+                    setPassword(cfg.demoPassword);
+                  }}
+                  className="shrink-0 px-2.5 py-1.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold rounded-lg shadow-sm transition-colors text-[11px] cursor-pointer"
+                >
+                  Auto Fill
+                </button>
+              </div>
 
               <form onSubmit={handleSignIn} className="space-y-4">
                 {/* Role Badge */}

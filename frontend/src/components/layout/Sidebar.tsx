@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
-  LayoutDashboard, Calendar, FileText, Search, Pill, LogOut,
-  Stethoscope, ClipboardList, Package, ChevronRight, Activity,
+  LayoutDashboard, Calendar, FileText, Search, LogOut,
+  Stethoscope, ClipboardList, Package, ChevronRight, Activity, X,
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 
@@ -28,15 +28,26 @@ const navItems: Record<string, NavItem[]> = {
     { label: 'Prescriptions', path: '/pharmacist/prescriptions', icon: ClipboardList },
     { label: 'Inventory', path: '/pharmacist/inventory', icon: Package },
   ],
+  ADMIN: [
+    { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { label: 'Prescriptions', path: '/admin/prescriptions', icon: ClipboardList },
+    { label: 'Inventory', path: '/admin/inventory', icon: Package },
+  ],
 };
 
 const roleConfig: Record<string, { label: string; color: string; bg: string }> = {
   PATIENT: { label: 'Patient', color: 'text-emerald-300', bg: 'bg-emerald-400/20' },
   DOCTOR: { label: 'Doctor', color: 'text-cyan-300', bg: 'bg-cyan-400/20' },
   PHARMACIST: { label: 'Pharmacist', color: 'text-teal-300', bg: 'bg-teal-400/20' },
+  ADMIN: { label: 'Admin', color: 'text-rose-300', bg: 'bg-rose-400/20' },
 };
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { user, logout } = useAuth();
   if (!user) return null;
 
@@ -44,25 +55,42 @@ export function Sidebar() {
   const role = roleConfig[user.role] || { label: user.role, color: 'text-white/70', bg: 'bg-white/10' };
   const initials = user.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() || 'U';
 
-  return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col shadow-sidebar"
-      style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 18%) 100%)' }}>
-
+  const sidebarContent = (
+    <aside
+      className={cn(
+        'fixed left-0 top-0 z-40 h-screen w-64 flex flex-col shadow-sidebar transition-transform duration-300 ease-in-out',
+        // On mobile: slide in/out. On lg+: always visible.
+        'lg:translate-x-0',
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+      )}
+      style={{ background: 'linear-gradient(180deg, hsl(175 84% 14%) 0%, hsl(190 80% 18%) 100%)' }}
+    >
       {/* ── Logo ── */}
       <div className="px-5 pt-6 pb-5">
-        <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-white/15 shadow-inner-glow">
-            <Stethoscope className="h-6 w-6 text-white" />
-          </div>
-          <div>
-            <span className="text-lg font-bold text-white tracking-tight">MediCare</span>
-            <div className="flex items-center gap-1 mt-0.5">
-              <Activity className="h-2.5 w-2.5 text-emerald-400" />
-              <span className="text-[10px] font-medium text-emerald-400/80 tracking-widest uppercase">
-                Health Portal
-              </span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-white/15 shadow-inner-glow">
+              <Stethoscope className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <span className="text-lg font-bold text-white tracking-tight">MediCare</span>
+              <div className="flex items-center gap-1 mt-0.5">
+                <Activity className="h-2.5 w-2.5 text-emerald-400" />
+                <span className="text-[10px] font-medium text-emerald-400/80 tracking-widest uppercase">
+                  Health Portal
+                </span>
+              </div>
             </div>
           </div>
+
+          {/* Close button — mobile only */}
+          <button
+            onClick={onClose}
+            className="lg:hidden p-1.5 rounded-lg hover:bg-white/10 transition-colors text-white/60 hover:text-white"
+            aria-label="Close navigation"
+          >
+            <X className="h-5 w-5" />
+          </button>
         </div>
         <div className="mt-4 h-px bg-white/10" />
       </div>
@@ -76,6 +104,7 @@ export function Sidebar() {
           <NavLink
             key={item.path}
             to={item.path}
+            onClick={onClose}
             className={({ isActive }) =>
               cn(
                 'nav-item group relative',
@@ -133,5 +162,19 @@ export function Sidebar() {
         </button>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Mobile backdrop overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+      {sidebarContent}
+    </>
   );
 }

@@ -29,9 +29,7 @@ const navItems: Record<string, NavItem[]> = {
     { label: 'Inventory', path: '/pharmacist/inventory', icon: Package },
   ],
   ADMIN: [
-    { label: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
-    { label: 'Prescriptions', path: '/admin/prescriptions', icon: ClipboardList },
-    { label: 'Inventory', path: '/admin/inventory', icon: Package },
+    { label: 'User Management', path: '/admin/dashboard', icon: LayoutDashboard },
   ],
 };
 

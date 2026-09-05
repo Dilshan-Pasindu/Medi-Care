@@ -20,6 +20,7 @@ export function DashboardLayout({ allowedRoles }: DashboardLayoutProps) {
       PATIENT: '/patient/dashboard',
       DOCTOR: '/doctor/dashboard',
       PHARMACIST: '/pharmacist/dashboard',
+      ADMIN: '/admin/dashboard',
     };
     return <Navigate to={defaultRoutes[user.role] || '/login'} replace />;
   }

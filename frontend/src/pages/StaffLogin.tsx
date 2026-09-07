@@ -14,6 +14,7 @@ import {
   Shield,
   Users,
   ShieldCheck,
+  Sparkles,
 } from 'lucide-react';
 
 type StaffRole = 'DOCTOR' | 'PHARMACIST' | 'ADMIN';
@@ -33,6 +34,8 @@ const ROLE_CONFIG: Record<
     emailPlaceholder: string;
     demoEmail: string;
     demoPassword: string;
+    chipBg: string;
+    chipText: string;
   }
 > = {
   DOCTOR: {
@@ -43,11 +46,18 @@ const ROLE_CONFIG: Record<
     panelFrom: 'hsl(220 90% 12%)',
     panelTo: 'hsl(250 80% 20%)',
     icon: Stethoscope,
-    description: 'Manage patient appointments, issue digital prescriptions, and access comprehensive medical records.',
-    features: ['View & manage appointments', 'Issue digital prescriptions', 'Patient medical history'],
+    description:
+      'Manage patient appointments, issue digital prescriptions, and access comprehensive medical records.',
+    features: [
+      'View & manage appointments',
+      'Issue digital prescriptions',
+      'Patient medical history',
+    ],
     emailPlaceholder: 'nimal@medicare.com',
     demoEmail: 'nimal@medicare.com',
     demoPassword: 'password123',
+    chipBg: 'rgba(99,102,241,0.12)',
+    chipText: '#818cf8',
   },
   PHARMACIST: {
     label: 'Pharmacist',
@@ -57,11 +67,18 @@ const ROLE_CONFIG: Record<
     panelFrom: 'hsl(175 84% 8%)',
     panelTo: 'hsl(155 70% 15%)',
     icon: FlaskConical,
-    description: 'Process incoming prescriptions, manage medicine inventory, and track dispensed items.',
-    features: ['Process prescriptions', 'Manage inventory', 'Track dispensing history'],
+    description:
+      'Process incoming prescriptions, manage medicine inventory, and track dispensed items.',
+    features: [
+      'Process prescriptions',
+      'Manage inventory',
+      'Track dispensing history',
+    ],
     emailPlaceholder: 'amal@medicare.com',
     demoEmail: 'amal@medicare.com',
     demoPassword: 'password123',
+    chipBg: 'rgba(16,185,129,0.12)',
+    chipText: '#34d399',
   },
   ADMIN: {
     label: 'Admin',
@@ -71,11 +88,18 @@ const ROLE_CONFIG: Record<
     panelFrom: 'hsl(340 85% 10%)',
     panelTo: 'hsl(355 75% 18%)',
     icon: ShieldCheck,
-    description: 'Full system access — manage users, doctors, pharmacists, and platform-wide settings.',
-    features: ['Manage users & roles', 'System configuration', 'Platform analytics & reports'],
+    description:
+      'Full system access — manage users, doctors, pharmacists, and platform-wide settings.',
+    features: [
+      'Manage users & roles',
+      'System configuration',
+      'Platform analytics & reports',
+    ],
     emailPlaceholder: 'admin@medicare.com',
     demoEmail: 'admin@medicare.com',
     demoPassword: 'admin123',
+    chipBg: 'rgba(244,63,94,0.12)',
+    chipText: '#fb7185',
   },
 };
 
@@ -171,11 +195,15 @@ export default function StaffLogin() {
         {/* Hero */}
         <div className="relative z-10 space-y-6">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 mb-2"
-            style={{ transition: 'all 0.4s ease' }}
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full"
+            style={{
+              background: cfg.chipBg,
+              border: `1px solid ${cfg.chipText}30`,
+              transition: 'all 0.4s ease',
+            }}
           >
-            <RoleIcon className="h-4 w-4 text-white/80" />
-            <span className="text-xs font-semibold text-white/80 uppercase tracking-wider">
+            <RoleIcon className="h-4 w-4" style={{ color: cfg.chipText }} />
+            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: cfg.chipText }}>
               {cfg.label} Access
             </span>
           </div>
@@ -209,10 +237,11 @@ export default function StaffLogin() {
           </div>
         </div>
 
+        {/* Bottom quote — no left border to avoid the bold-line issue */}
         <div className="relative z-10">
-          <blockquote className="text-sm text-white/35 italic border-l-2 border-white/15 pl-4">
+          <p className="text-sm text-white/35 italic pl-4">
             "Healthcare excellence powered by technology"
-          </blockquote>
+          </p>
         </div>
       </div>
 
@@ -250,7 +279,7 @@ export default function StaffLogin() {
                       key={role}
                       type="button"
                       onClick={() => handleRoleSwitch(role)}
-                      className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl text-sm font-semibold transition-all duration-300 ${
+                      className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-2 rounded-xl text-xs font-semibold transition-all duration-300 ${
                         isActive
                           ? 'text-white shadow-lg scale-[1.02]'
                           : 'text-slate-500 hover:text-slate-700 hover:bg-white/50'
@@ -263,7 +292,7 @@ export default function StaffLogin() {
                           : {}
                       }
                     >
-                      <RoleIco className="h-4 w-4" />
+                      <RoleIco className="h-3.5 w-3.5 shrink-0" />
                       {ROLE_CONFIG[role].label}
                     </button>
                   );
@@ -281,12 +310,16 @@ export default function StaffLogin() {
               )}
 
               {/* Quick Demo Fill Helper */}
-              <div className="mb-5 p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-2 text-xs">
-                <div className="truncate">
-                  <div className="font-semibold text-slate-700">Demo {cfg.label} Credentials:</div>
-                  <div className="text-slate-500 font-mono mt-0.5">
-                    {cfg.demoEmail} &bull; {cfg.demoPassword}
+              <div className="mb-5 p-3.5 rounded-xl flex items-center justify-between gap-3"
+                style={{ background: `${cfg.accentFrom}10`, border: `1px solid ${cfg.accentFrom}25` }}>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <Sparkles className="h-3 w-3" style={{ color: cfg.accentTo, filter: 'brightness(1.5)' }} />
+                    <span className="text-xs font-semibold text-slate-700">Demo {cfg.label}</span>
                   </div>
+                  <p className="text-[11px] text-slate-500 font-mono truncate">
+                    {cfg.demoEmail} · {cfg.demoPassword}
+                  </p>
                 </div>
                 <button
                   type="button"
@@ -294,7 +327,8 @@ export default function StaffLogin() {
                     setEmail(cfg.demoEmail);
                     setPassword(cfg.demoPassword);
                   }}
-                  className="shrink-0 px-2.5 py-1.5 bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-semibold rounded-lg shadow-sm transition-colors text-[11px] cursor-pointer"
+                  className="shrink-0 px-3 py-1.5 text-white font-semibold rounded-lg shadow-sm transition-all text-[11px] cursor-pointer hover:opacity-90 hover:shadow-md hover:-translate-y-0.5"
+                  style={{ background: `linear-gradient(135deg, ${cfg.accentFrom}, ${cfg.accentTo})` }}
                 >
                   Auto Fill
                 </button>
@@ -367,25 +401,16 @@ export default function StaffLogin() {
                 </button>
               </form>
 
-              {/* Divider */}
-              <div className="mt-5 flex items-center gap-3">
-                <div className="flex-1 h-px bg-slate-200" />
-                <span className="text-xs text-slate-400">or</span>
-                <div className="flex-1 h-px bg-slate-200" />
-              </div>
-
-              {/* Patient login link */}
-              <div className="mt-4 text-center">
-                <p className="text-xs text-slate-500">
-                  Are you a patient?{' '}
-                  <Link
-                    to="/login"
-                    className="font-semibold text-teal-600 hover:text-teal-700 inline-flex items-center gap-0.5 transition-colors"
-                  >
-                    <Users className="h-3 w-3" />
-                    &nbsp;Patient Login
-                  </Link>
-                </p>
+              {/* Patient login link — clean, no divider line */}
+              <div className="mt-6 flex items-center justify-center gap-2">
+                <span className="text-xs text-slate-400">Are you a patient?</span>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+                >
+                  <Users className="h-3 w-3" />
+                  Patient Login
+                </Link>
               </div>
             </div>
 

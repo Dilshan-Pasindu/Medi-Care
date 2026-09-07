@@ -16,11 +16,25 @@ class ApiClient {
     return headers;
   }
 
+  /** Safely parse JSON — throws a friendly error if the server returns HTML */
+  private async safeJson(res: Response): Promise<any> {
+    const text = await res.text();
+    try {
+      return JSON.parse(text);
+    } catch {
+      // Server returned an HTML page (e.g. 502 Bad Gateway, Vite error page)
+      if (!res.ok) {
+        throw new Error(`Server error (${res.status}): unable to reach the API. Please try again later.`);
+      }
+      throw new Error('Unexpected server response — expected JSON.');
+    }
+  }
+
   async get<T>(path: string): Promise<T> {
     const res = await fetch(`${this.baseUrl}${path}`, {
       headers: this.getHeaders(),
     });
-    const data = await res.json();
+    const data = await this.safeJson(res);
     if (!res.ok) throw new Error(data.message || 'Request failed');
     return data;
   }
@@ -31,7 +45,7 @@ class ApiClient {
       headers: this.getHeaders(),
       body: body ? JSON.stringify(body) : undefined,
     });
-    const data = await res.json();
+    const data = await this.safeJson(res);
     if (!res.ok) throw new Error(data.message || 'Request failed');
     return data;
   }
@@ -42,7 +56,7 @@ class ApiClient {
       headers: this.getHeaders(),
       body: JSON.stringify(body),
     });
-    const data = await res.json();
+    const data = await this.safeJson(res);
     if (!res.ok) throw new Error(data.message || 'Request failed');
     return data;
   }
@@ -53,7 +67,7 @@ class ApiClient {
       headers: this.getHeaders(),
       body: JSON.stringify(body),
     });
-    const data = await res.json();
+    const data = await this.safeJson(res);
     if (!res.ok) throw new Error(data.message || 'Request failed');
     return data;
   }
@@ -64,7 +78,7 @@ class ApiClient {
       headers: this.getHeaders(),
     });
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
+      const data = await this.safeJson(res).catch(() => ({}));
       throw new Error(data.message || 'Delete failed');
     }
   }
